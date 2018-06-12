@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -59,7 +60,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     /* 讲扫描到设备的信息输出到listview的适配器 */
                     if(!deviceList.contains(device)){
                         deviceList.add(device);
-                        adapter.add(device.getName() + "\n" + device.getAddress());
+                        String name=device.getName();
+                        if(TextUtils.isEmpty(name)){
+                            name="未知设备名称";
+                        }
+                        adapter.add(name + "\n" + device.getAddress());
                         adapter.notifyDataSetChanged();
                     }
 
