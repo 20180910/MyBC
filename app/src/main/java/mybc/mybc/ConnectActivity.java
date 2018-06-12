@@ -160,7 +160,7 @@ public class ConnectActivity extends BaseActivity implements View.OnClickListene
 //最后返回字符串就是16进制的字符串
         return hex.toString();
     }
-    private void sendText2(final String str) {
+    private void sendText2(final String msg) {
 //        ManyBlue.blueWriteDataStr2Hex("0a0a01", "tag"); //例如 "0a0a01"
         new Thread(new Runnable() {
             @Override
@@ -168,7 +168,7 @@ public class ConnectActivity extends BaseActivity implements View.OnClickListene
                 int i;
                 byte[] buff = null;
                 try {
-                    buff = str.getBytes(Config.format);
+                    buff = msg.getBytes(Config.format);
                     System.out.println("buff len:" + buff.length);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
@@ -219,7 +219,20 @@ public class ConnectActivity extends BaseActivity implements View.OnClickListene
                     }
                     ConnectActivity.target_chara.setValue(lastData);//ATLED=1转16进制: 41 54 4C 45 44 3D 31
                     helper.writeCharacteristic(ConnectActivity.target_chara);
-
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(adapter==null){
+                                return;
+                            }
+                            ListBean bean=new ListBean();
+                            bean.isSend=true;
+                            bean.text=msg;
+                            adapter.getList().add(bean);
+                            adapter.notifyDataSetChanged();
+                            et_content.setText(null);
+                        }
+                    });
                 }
             }
         }).start();
@@ -252,6 +265,7 @@ public class ConnectActivity extends BaseActivity implements View.OnClickListene
         unRegister();
         if(helper!=null){
             helper.disconnect();
+            helper.close();
         }
     }
 
@@ -300,8 +314,17 @@ public class ConnectActivity extends BaseActivity implements View.OnClickListene
         Log("==="+rev_string);
         this.rev_str += rev_string;
         showMsg(rev_str);
+        final String finalRev_string = rev_string;
         runOnUiThread(new Runnable() {
             public void run() {
+                if(adapter==null){
+                    return;
+                }
+                ListBean bean=new ListBean();
+                bean.isSend=false;
+                bean.text= finalRev_string;
+                adapter.getList().add(bean);
+                adapter.notifyDataSetChanged();
             }
         });
     }

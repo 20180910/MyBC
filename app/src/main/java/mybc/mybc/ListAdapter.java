@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class ListAdapter extends BaseAdapter{
     private Context mContext;
-    private List<ListBean> list;
+    private List<ListBean> list=new ArrayList<>();
     @Override
     public int getCount() {
         return list==null?0:list.size();
@@ -46,7 +47,7 @@ public class ListAdapter extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
         Holder holder;
         if(convertView==null){
-            convertView= LayoutInflater.from(mContext).inflate(R.layout.activity_connect,null);
+            convertView= LayoutInflater.from(mContext).inflate(R.layout.list_item,null);
             holder=new Holder();
             holder.tv_receive=convertView.findViewById(R.id.tv_receive);
             holder.tv_send=convertView.findViewById(R.id.tv_send);
