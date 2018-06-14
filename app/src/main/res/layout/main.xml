@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff" >
+
+    <ListView
+        android:id="@+id/in"
+        android:layout_width="0.01dp"
+        android:layout_height="0.01dp"
+        android:stackFromBottom="true" />
+
+    <Button
+        android:id="@+id/maincontentbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="连接设备" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="蓝牙通信开关系统"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/mainled1guanbi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/mainled1dakai"
+        android:layout_alignBottom="@+id/mainled1dakai"
+        android:layout_alignParentRight="true"
+        android:text="LED1关闭"
+        android:textSize="25sp" />
+
+    <Button
+        android:id="@+id/mainled1dakai"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/maincontentbtn"
+        android:layout_marginTop="67dp"
+        android:text="LED1打开"
+        android:textSize="25sp" />
+    
+        <Button
+        android:id="@+id/mainled2guanbi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/mainled2dakai"
+        android:layout_alignBottom="@+id/mainled2dakai"
+        android:layout_alignParentRight="true"
+        android:text="LED2关闭"
+        android:textSize="25sp" />
+
+    <Button
+        android:id="@+id/mainled2dakai"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/maincontentbtn"
+        android:layout_marginTop="200dp"
+        android:text="LED2打开"
+        android:textSize="25sp" />
+    
+            <Button
+        android:id="@+id/mainled3guanbi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/mainled3dakai"
+        android:layout_alignBottom="@+id/mainled3dakai"
+        android:layout_alignParentRight="true"
+        android:text="LED3关闭"
+        android:textSize="25sp" />
+
+    <Button
+        android:id="@+id/mainled3dakai"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/maincontentbtn"
+        android:layout_marginTop="333dp"
+        android:text="LED3打开"
+        android:textSize="25sp" />
+
+</RelativeLayout>

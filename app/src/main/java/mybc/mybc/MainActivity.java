@@ -105,9 +105,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
-    private void Log(String str) {
-        Log.i("Log", str);
-    }
 
     private void initView() {
 
@@ -156,9 +153,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         listView.setAdapter(adapter);
     }
 
-    private void showMsg(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
 
     private void initData() {
         setStatus(mBluetoothAdapter.isEnabled());

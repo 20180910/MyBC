@@ -19,7 +19,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.inuker.bluetooth.library.BluetoothClient;
 
@@ -144,9 +143,6 @@ public class ConnectActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-    private void Log(String str) {
-        Log.i("Log", str);
-    }
     public String convertStringToHex(String str){
 //把字符串转换成char数组
         char[] chars = str.toCharArray();
@@ -241,9 +237,7 @@ public class ConnectActivity extends BaseActivity implements View.OnClickListene
     public int[] dataSeparate(int len) {
         return new int[]{len / 20, len % 20};
     }
-    private void showMsg(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
+
 
     public void register() {
         IntentFilter intentFilter = new IntentFilter();
