@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ListAdapter extends BaseAdapter{
     private Context mContext;
-    private List<ListBean> list=new ArrayList<>();
+    private List<BlueNameBean> list=new ArrayList<>();
     @Override
     public int getCount() {
         return list==null?0:list.size();
@@ -25,16 +25,16 @@ public class ListAdapter extends BaseAdapter{
     public ListAdapter(Context mContext) {
         this.mContext = mContext;
     }
-    public List<ListBean> getList() {
+    public List<BlueNameBean> getList() {
         return list;
     }
 
-    public void setList(List<ListBean> list) {
+    public void setList(List<BlueNameBean> list) {
         this.list = list;
     }
 
     @Override
-    public ListBean getItem(int position) {
+    public BlueNameBean getItem(int position) {
         return list.get(position);
     }
 
@@ -56,7 +56,7 @@ public class ListAdapter extends BaseAdapter{
             holder= (Holder) convertView.getTag();
         }
 
-        ListBean bean = getItem(position);
+        BlueNameBean bean = getItem(position);
 
         if(bean.isSend){
             holder.tv_receive.setVisibility(View.GONE);

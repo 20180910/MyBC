@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -38,17 +37,15 @@ public class JingDianActivity extends BaseActivity implements View.OnClickListen
     TextView tv_duankai;
     ListView listView;
     private BluetoothAdapter mBtAdapter;
-
+    List<DeviceNameBean> deviceList =new ArrayList<>();
     Handler mHandler;
 
-    ArrayAdapter<String> adapter;
-    List<String> deviceList = new ArrayList();
+    BlueListAdapter  adapter;
     private LiteBluetooth liteBluetooth;
     private boolean scan_flag = true;
     private boolean mScanning;
 
-    int REQUEST_ENABLE_BT = 1;
-    private static final long SCAN_PERIOD = 10000;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +54,8 @@ public class JingDianActivity extends BaseActivity implements View.OnClickListen
         setContentView(R.layout.activity_main);
         mHandler = new Handler(getMainLooper());
 
-        initBlue();
         initView();
+        initBlue();
         initData();
     }
 
@@ -67,9 +64,13 @@ public class JingDianActivity extends BaseActivity implements View.OnClickListen
         Set<BluetoothDevice> bondedDevices = mBtAdapter.getBondedDevices();
         if (bondedDevices.size() > 0) {
             for (BluetoothDevice device : bondedDevices) {
-                deviceList.add(device.getAddress());
-                adapter.add(device.getName() + "\n" + device.getAddress());
+                DeviceNameBean deviceNameBean = new DeviceNameBean();
+                deviceNameBean.isConnected=true;
+                deviceNameBean.name=device.getName();
+                deviceNameBean.address=device.getAddress();
+                deviceList.add(deviceNameBean);
             }
+            adapter.getList().addAll(deviceList);
             adapter.notifyDataSetChanged();
         }
 
@@ -106,19 +107,19 @@ public class JingDianActivity extends BaseActivity implements View.OnClickListen
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final String address = deviceList.get(position);
-                if (address == null)
+                final DeviceNameBean deviceNameBean = adapter.getList().get(position);
+                if (deviceNameBean == null)
                     return;
                 if (mBtAdapter != null && mBtAdapter.isDiscovering()) {
                     mBtAdapter.cancelDiscovery();
                 }
                 final Intent intent = new Intent(mContext, BlueConnectActivity.class);
                 intent.putExtra("name", "");
-                intent.putExtra("address", address);
+                intent.putExtra("address", deviceNameBean.address);
                 startActivity(intent);
             }
         });
-        adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1);
+        adapter = new BlueListAdapter(mContext);
         listView.setAdapter(adapter);
     }
 
@@ -129,8 +130,11 @@ public class JingDianActivity extends BaseActivity implements View.OnClickListen
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
-                    deviceList.add(device.getAddress());
-                    adapter.add(device.getName() + "\n" + device.getAddress());
+                    DeviceNameBean deviceNameBean = new DeviceNameBean();
+                    deviceNameBean.address=device.getAddress();
+                    deviceNameBean.name=device.getName();
+                    deviceNameBean.isConnected=false;
+                    adapter.add(deviceNameBean);
                     adapter.notifyDataSetChanged();
                 }
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
@@ -195,8 +199,8 @@ public class JingDianActivity extends BaseActivity implements View.OnClickListen
                 if (mBtAdapter == null || !mBtAdapter.isEnabled()) {
                     showMsg("请开启蓝牙之后再试");
                 } else {
-                    deviceList.clear();
-                    adapter.clear();
+                    adapter.getList().clear();
+                    adapter.getList().addAll(deviceList);
                     adapter.notifyDataSetChanged();
                     saoMiao();
                 }

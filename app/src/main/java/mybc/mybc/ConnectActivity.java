@@ -221,7 +221,7 @@ public class ConnectActivity extends BaseActivity implements View.OnClickListene
                             if(adapter==null){
                                 return;
                             }
-                            ListBean bean=new ListBean();
+                            BlueNameBean bean=new BlueNameBean();
                             bean.isSend=true;
                             bean.text=msg;
                             adapter.getList().add(bean);
@@ -314,7 +314,7 @@ public class ConnectActivity extends BaseActivity implements View.OnClickListene
                 if(adapter==null){
                     return;
                 }
-                ListBean bean=new ListBean();
+                BlueNameBean bean=new BlueNameBean();
                 bean.isSend=false;
                 bean.text= finalRev_string;
                 adapter.getList().add(bean);
