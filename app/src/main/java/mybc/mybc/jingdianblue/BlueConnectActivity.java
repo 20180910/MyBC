@@ -60,14 +60,17 @@ public class BlueConnectActivity extends BaseActivity implements DialogInter {
         setContentView(R.layout.blue_connect);
         mHandler=new Handler(getMainLooper());
         helper=new BlueHelper(mContext,this);
-        register();
+//        register();
+        showDialog();
         initView();
         initData();
-
-        showDialog();
-
-        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
-        helper.connect(device);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+                helper.connect(device);
+            }
+        }).start();
 
     }
     String TAG=this.getClass().getSimpleName();
@@ -98,14 +101,15 @@ public class BlueConnectActivity extends BaseActivity implements DialogInter {
                 switch (index){
                     case 1:
                         sendMessage(isChecked?"1":"2");
+                        sc_led1.setText(isChecked?"关闭":"打开");
                     break;
                     case 2:
-
                         sendMessage(isChecked?"3":"4");
+                        sc_led2.setText(isChecked?"关闭":"打开");
                     break;
                     case 3:
-
                         sendMessage(isChecked?"5":"6");
+                        sc_led3.setText(isChecked?"关闭":"打开");
                     break;
                 }
             }
@@ -153,15 +157,20 @@ public class BlueConnectActivity extends BaseActivity implements DialogInter {
         }
     }
     @Override
-    public void dismiss(boolean isSuccess) {
-        dismissDialog();
-        if(isSuccess){
-            showMsg("连接成功");
-        }else{
-            showMsg("连接失败");
-            helper.close();
-            finish();
-        }
+    public void dismiss(final boolean isSuccess) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                dismissDialog();
+                if(isSuccess){
+                    showMsg("连接成功");
+                }else{
+                    showMsg("连接失败");
+                    helper.close();
+                    finish();
+                }
+            }
+        });
     }
 }
 

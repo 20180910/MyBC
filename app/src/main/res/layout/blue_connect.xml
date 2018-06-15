@@ -30,7 +30,7 @@
             android:layout_margin="20dp"
             android:text="关闭"
             android:textColor="@color/gray_66"
-            android:checked="false"
+            android:checked="true"
             android:drawablePadding="20dp"
             />
     </LinearLayout>
@@ -54,7 +54,7 @@
             android:layout_margin="20dp"
             android:text="关闭"
             android:textColor="@color/gray_66"
-            android:checked="false"
+            android:checked="true"
             android:drawablePadding="20dp"
             />
     </LinearLayout>
@@ -78,7 +78,7 @@
             android:layout_margin="20dp"
             android:text="关闭"
             android:textColor="@color/gray_66"
-            android:checked="false"
+            android:checked="true"
             android:drawablePadding="20dp"
             />
     </LinearLayout>
