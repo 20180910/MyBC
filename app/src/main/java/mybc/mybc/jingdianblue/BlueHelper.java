@@ -1,4 +1,4 @@
-package mybc.mybc.a;
+package mybc.mybc.jingdianblue;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;

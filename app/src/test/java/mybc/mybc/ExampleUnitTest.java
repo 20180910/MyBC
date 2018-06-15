@@ -3,6 +3,7 @@ package mybc.mybc;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,6 +16,12 @@ public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
+    }
+    @Test
+    public void chaiGuanJun() throws Exception {
+        String[] qiuDui={"巴西","德国","西班牙","法国","阿根廷","比利时","葡萄牙","英格兰","乌拉圭"};
+        Random win = new Random();
+        System.out.println("2018俄罗斯世界杯冠军："+qiuDui[win.nextInt(9)]);
     }
     @Test
     public void afd() throws Exception {

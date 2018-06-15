@@ -1,4 +1,4 @@
-package mybc.mybc.a;
+package mybc.mybc.jingdianblue.other;
 /**
  * 描述：蓝牙服务核心类
  */

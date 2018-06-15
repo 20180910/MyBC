@@ -1,6 +1,7 @@
-package mybc.mybc.a;
+package mybc.mybc.jingdianblue;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +58,6 @@ public class BlueListAdapter extends BaseAdapter{
         if(convertView==null){
             convertView= LayoutInflater.from(mContext).inflate(R.layout.blue_item,null);
             holder=new Holder();
-            holder.tv_blue_title=convertView.findViewById(R.id.tv_blue_title);
             holder.tv_blue_name=convertView.findViewById(R.id.tv_blue_name);
             convertView.setTag(holder);
         }else{
@@ -65,31 +65,16 @@ public class BlueListAdapter extends BaseAdapter{
         }
 
         DeviceNameBean bean = getItem(position);
-        if(bean.isConnected){
-            holder.tv_blue_title.setText("已配对设备");
-            if(showTitle==false){
-                showTitle=true;
-                holder.tv_blue_title.setVisibility(View.VISIBLE);
-            }else{
-//                holder.tv_blue_title.setVisibility(View.GONE);
-            }
-        }else{
-            holder.tv_blue_title.setText("其他设备");
-            if(showSecondTile==false){
-                showSecondTile=true;
-                holder.tv_blue_title.setVisibility(View.VISIBLE);
-            }else{
-//                holder.tv_blue_title.setVisibility(View.GONE);
-            }
-        }
 
         holder.tv_blue_name.setText(bean.name+"\n"+bean.address);
+
+        Log.e("======","==="+bean.name);
 
         return convertView;
     }
 
     public class Holder{
-        TextView tv_blue_title;
+//        TextView tv_blue_title;
         TextView tv_blue_name;
     }
 }

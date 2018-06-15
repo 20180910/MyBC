@@ -17,14 +17,14 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>-->
-        <activity android:name=".a.JingDianActivity">
+        <activity android:name=".jingdianblue.JingDianActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".a.BlueConnectActivity"/>
+        <activity android:name=".jingdianblue.BlueConnectActivity"/>
         <activity android:name=".ConnectActivity"/>
     </application>
 

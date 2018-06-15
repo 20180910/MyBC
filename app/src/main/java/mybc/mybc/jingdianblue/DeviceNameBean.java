@@ -1,11 +1,10 @@
-package mybc.mybc.a;
+package mybc.mybc.jingdianblue;
 
 /**
  * Created by Administrator on 2018/6/14.
  */
 
 public class DeviceNameBean {
-    public boolean isConnected;
     public String name;
     public String address;
 

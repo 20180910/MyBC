@@ -1,4 +1,4 @@
-package mybc.mybc.a;
+package mybc.mybc.jingdianblue;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -35,16 +35,21 @@ public class JingDianActivity extends BaseActivity implements View.OnClickListen
     TextView tv_sao;
     TextView tv_status;
     TextView tv_duankai;
-    ListView listView;
+    TextView tv_blue_title;
     private BluetoothAdapter mBtAdapter;
-    List<DeviceNameBean> deviceList =new ArrayList<>();
+
+    BlueListAdapter adapter;
+    ListView listView;
+
+    BlueListAdapter adapter2;
+    ListView listView2;
+    List<String> addressList = new ArrayList<>();
+
     Handler mHandler;
 
-    BlueListAdapter  adapter;
     private LiteBluetooth liteBluetooth;
     private boolean scan_flag = true;
     private boolean mScanning;
-
 
 
     @Override
@@ -60,17 +65,17 @@ public class JingDianActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initBlue() {
+        tv_blue_title.setVisibility(View.GONE);
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
         Set<BluetoothDevice> bondedDevices = mBtAdapter.getBondedDevices();
         if (bondedDevices.size() > 0) {
+            tv_blue_title.setVisibility(View.VISIBLE);
             for (BluetoothDevice device : bondedDevices) {
                 DeviceNameBean deviceNameBean = new DeviceNameBean();
-                deviceNameBean.isConnected=true;
-                deviceNameBean.name=device.getName();
-                deviceNameBean.address=device.getAddress();
-                deviceList.add(deviceNameBean);
+                deviceNameBean.name = device.getName();
+                deviceNameBean.address = device.getAddress();
+                adapter.add(deviceNameBean);
             }
-            adapter.getList().addAll(deviceList);
             adapter.notifyDataSetChanged();
         }
 
@@ -86,6 +91,8 @@ public class JingDianActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initView() {
+
+        tv_blue_title = (TextView) findViewById(R.id.tv_blue_title);
 
         tv_kai = (TextView) findViewById(R.id.tv_kai);
         tv_kai.setOnClickListener(this);
@@ -104,6 +111,22 @@ public class JingDianActivity extends BaseActivity implements View.OnClickListen
 
 
         listView = (ListView) findViewById(R.id.listView);
+        listView2 = (ListView) findViewById(R.id.listView2);
+        listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final DeviceNameBean deviceNameBean = adapter2.getList().get(position);
+                if (deviceNameBean == null)
+                    return;
+                if (mBtAdapter != null && mBtAdapter.isDiscovering()) {
+                    mBtAdapter.cancelDiscovery();
+                }
+                final Intent intent = new Intent(mContext, BlueConnectActivity.class);
+                intent.putExtra("name", "");
+                intent.putExtra("address", deviceNameBean.address);
+                startActivity(intent);
+            }
+        });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -121,6 +144,9 @@ public class JingDianActivity extends BaseActivity implements View.OnClickListen
         });
         adapter = new BlueListAdapter(mContext);
         listView.setAdapter(adapter);
+
+        adapter2 = new BlueListAdapter(mContext);
+        listView2.setAdapter(adapter2);
     }
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -130,12 +156,18 @@ public class JingDianActivity extends BaseActivity implements View.OnClickListen
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
-                    DeviceNameBean deviceNameBean = new DeviceNameBean();
-                    deviceNameBean.address=device.getAddress();
-                    deviceNameBean.name=device.getName();
-                    deviceNameBean.isConnected=false;
-                    adapter.add(deviceNameBean);
-                    adapter.notifyDataSetChanged();
+                    String address = device.getAddress();
+                    String name = device.getName();
+                    if (!addressList.contains(address)) {
+                        DeviceNameBean deviceNameBean = new DeviceNameBean();
+                        deviceNameBean.address = address;
+                        deviceNameBean.name = name;
+
+                        addressList.add(address);
+                        adapter2.add(deviceNameBean);
+                        adapter2.notifyDataSetChanged();
+                        Log("##===" + device.getAddress() + "---" + device.getName());
+                    }
                 }
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 /*if (adapter.getCount() == 0) {
@@ -145,11 +177,22 @@ public class JingDianActivity extends BaseActivity implements View.OnClickListen
                 if (mBtAdapter != null && mBtAdapter.isDiscovering()) {
                     mBtAdapter.cancelDiscovery();
                 }
+                tv_sao.setText("扫描设备");
+                Log("===saomiao2222222");
             }
         }
     };
 
     private void saoMiao() {
+        tv_sao.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mBtAdapter != null && mBtAdapter.isDiscovering()) {
+                    mBtAdapter.cancelDiscovery();
+                    tv_sao.setText("扫描设备");
+                }
+            }
+        }, 10000);
         doDiscovery();
     }
 
@@ -183,6 +226,12 @@ public class JingDianActivity extends BaseActivity implements View.OnClickListen
             mBtAdapter.disable();
         }
     }
+    private void stop(){
+        if (mBtAdapter != null && mBtAdapter.isDiscovering()) {
+            mBtAdapter.cancelDiscovery();
+            tv_sao.setText("扫描设备");
+        }
+    }
 
     @Override
     public void onClick(View v) {
@@ -198,10 +247,14 @@ public class JingDianActivity extends BaseActivity implements View.OnClickListen
             case R.id.tv_sao:
                 if (mBtAdapter == null || !mBtAdapter.isEnabled()) {
                     showMsg("请开启蓝牙之后再试");
+                } else if (mBtAdapter != null && mBtAdapter.isDiscovering()) {
+                    stop();
                 } else {
-                    adapter.getList().clear();
-                    adapter.getList().addAll(deviceList);
-                    adapter.notifyDataSetChanged();
+                    addressList.clear();
+                    adapter2.getList().clear();
+                    adapter2.notifyDataSetChanged();
+
+                    tv_sao.setText("停止扫描");
                     saoMiao();
                 }
                 break;

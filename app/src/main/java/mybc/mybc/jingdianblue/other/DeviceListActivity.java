@@ -1,4 +1,4 @@
-package mybc.mybc.a;
+package mybc.mybc.jingdianblue.other;
 /**
  * 描述：此类为扫描和连接蓝牙设备弹出框
  * 作用：扫描和连接蓝牙设备

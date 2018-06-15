@@ -1,4 +1,4 @@
-package mybc.mybc.a;
+package mybc.mybc.jingdianblue.other;
 /**
  * 描述：此类为蓝牙调试助手主界面
  *  
