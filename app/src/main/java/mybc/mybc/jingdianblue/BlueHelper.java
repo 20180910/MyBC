@@ -37,17 +37,24 @@ public class BlueHelper {
         socket = null;
         try {
             socket = device.createRfcommSocketToServiceRecord(uuid);
+//            Method m = device.getClass().getMethod("createRfcommSocket", new Class[] {int.class});
+//            socket = (BluetoothSocket) m.invoke(device, 1);
+
             socket.connect();
             connectedThread = new ConnectedThread(socket);
             connectedThread.start();
             inter.dismiss(true);
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log("create() 失败");
             inter.dismiss(false);
         }
     }
 
     public void close() {
+        if(connectedThread!=null&&connectedThread.isAlive()){
+            connectedThread.stopTh();
+            connectedThread.interrupt();
+        }
         if (socket != null) {
             try {
                 socket.close();
@@ -58,13 +65,12 @@ public class BlueHelper {
     }
 
     private class ConnectedThread extends Thread {
-        private final BluetoothSocket mmSocket;
         private final InputStream mmInStream;
         private final OutputStream mmOutStream;
+        private boolean flag=true;
 
         public ConnectedThread(BluetoothSocket socket) {
             Log.d(TAG, "创建 ConnectedThread");
-            mmSocket = socket;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
             // 得到BluetoothSocket输入和输出流
@@ -78,16 +84,31 @@ public class BlueHelper {
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
         }
-
+        public void stopTh(){
+            flag=false;
+            if(mmInStream!=null){
+                try {
+                    mmInStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(mmOutStream!=null){
+                try {
+                    mmOutStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         public void run() {
             Log.i(TAG, "BEGIN mConnectedThread");
             int bytes;
             String str1 = "";
             // 循环监听消息
-            while (true) {
+            while (flag) {
                 try {
                     byte[] buffer = new byte[256];
-
                     bytes = mmInStream.read(buffer);
                     String readStr = new String(buffer, 0, bytes);
                     String str = bytes2HexString(buffer).replaceAll("00", "").trim();
@@ -119,8 +140,8 @@ public class BlueHelper {
                         break;
                     }
                 } catch (IOException e) {
-                    Log.e(TAG, "disconnected", e);
-                    inter.dismiss(false);
+//                    Log.e(TAG, "disconnected", e);
+//                    inter.dismiss(false);
 //                    connectionLost();
 //
 //                    if (mState != STATE_NONE) {
